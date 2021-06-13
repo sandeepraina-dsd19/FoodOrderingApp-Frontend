@@ -9,9 +9,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
 import Button from '@material-ui/core/Button';
+import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import InputLabel from "@material-ui/core/InputLabel";
 import Input from "@material-ui/core/Input";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import Modal from 'react-modal';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -50,6 +52,11 @@ const styles = theme => ({
         },
         cursor: 'default',
     },
+    searchBox: {
+        [theme.breakpoints.only('xs')]: {
+            marginBottom: theme.spacing(1.5),
+        },
+    },
     inputRoot: {
         color: 'inherit',
     },
@@ -67,6 +74,15 @@ const styles = theme => ({
             marginBottom: theme.spacing(1.5),
         },
     },
+});
+
+// theme for changing the border bottom color of the searchbox to white when customer clicks on the serach field 
+const theme = createMuiTheme({
+    palette: {
+        primary: {
+            main: '#ffffff',
+        }
+    }
 });
 
 //custom style for modal
@@ -147,6 +163,29 @@ class Header extends Component {
                             <FastfoodIcon/>
                         </IconButton>
                         </Link>
+                        <div className={classes.grow}/>
+                        {/* searchbox will be displayed only if needed */}
+                        {this.props.showSearchBox ?
+                            <div className={classes.searchBox}>
+                                <ThemeProvider theme={theme}>
+                                    <InputLabel htmlFor="search-box-input"/>
+                                    <Input id="search-box-input"
+                                           startAdornment={
+                                               <InputAdornment position="start">
+                                                   <SearchIcon/>
+                                               </InputAdornment>
+                                           }
+                                           placeholder="Search by Restaurant Name"
+                                           classes={{
+                                               root: classes.inputRoot,
+                                               input: classes.inputInput,
+                                           }}
+                                           onChange={this.props.searchHandler}
+                                    />
+                                </ThemeProvider>
+                            </div>
+                            : null
+                        }
                         <div className={classes.grow}/>
                         {/* If customer is not logged in then it displays login button otherwise displays the customer's firstname */}
                         {!this.state.loggedIn ?
@@ -447,6 +486,7 @@ class Header extends Component {
             }
         });
         let url = this.props.baseUrl + 'customer/login';
+        // let url = 'http://localhost:8080/api/customer/login';
         xhrLogin.open("Post", url);
         xhrLogin.setRequestHeader("Authorization", "Basic " + window.btoa(this.state.loginContactNo + ":" + this.state.loginPassword));
         xhrLogin.setRequestHeader("Content-Type", "application/json");
