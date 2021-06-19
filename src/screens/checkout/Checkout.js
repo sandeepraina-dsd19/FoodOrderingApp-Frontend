@@ -63,7 +63,7 @@ class Checkout extends Component {
             displayChange: 'display-none',
             placeOrderMessage: undefined,
             placeOrderMessageOpen: false,
-            couponId: '2ddf65fe-ecd0-11e8-8eb2-f2801f1b9fd1',
+            couponId: '',
         }
     }
 
@@ -72,6 +72,7 @@ class Checkout extends Component {
             this.fetchAddress();
             this.fetchStates();
             this.fetchPayments();
+			this.fetchCoupon();
         }
     }
 
@@ -387,6 +388,32 @@ class Checkout extends Component {
         });
 
         let url = this.props.baseUrl + 'address/customer';
+
+        xhr.open('GET', url);
+
+        xhr.setRequestHeader('authorization', 'Bearer ' + token);
+        xhr.setRequestHeader("Cache-Control", "no-cache");
+
+        xhr.send();
+    }
+	
+	 /**
+     * This function connects to the API server to fetch the coupon.
+     */
+    fetchCoupon = () => {
+        let token = sessionStorage.getItem('access-token');
+
+        let xhr = new XMLHttpRequest();
+
+        let that = this;
+
+        xhr.addEventListener("readystatechange", function () {
+            if (this.readyState === 4) {
+				that.setState({couponId: JSON.parse(this.responseText).id});
+            }
+        });
+
+        let url = this.props.baseUrl + '/order/coupon/Flat30';
 
         xhr.open('GET', url);
 
