@@ -175,7 +175,7 @@ class Home extends Component {
             if (this.readyState === 4) {
                 if (!JSON.parse(this.responseText).restaurants) {
                     that.setState({
-                        restaurants: null
+                        restaurants: []
                     });
                 } else {
                     that.setState({

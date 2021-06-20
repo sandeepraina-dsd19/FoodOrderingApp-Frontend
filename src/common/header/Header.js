@@ -27,6 +27,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import {Link} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 //importing the css file of the header
 import './Header.css';
@@ -200,13 +201,16 @@ class Header extends Component {
                                 <Menu id="profile-menu" open={this.state.menuState} onClose={this.onMenuClose}
                                       anchorEl={this.state.anchorEl} getContentAnchorEl={null}
                                       anchorOrigin={{vertical: "bottom", horizontal: "left"}} keepMounted>
-                                    <MenuItem style={{minHeight: 48}} onClick={this.onMyProfile}><Typography><Link
-                                        to={"/profile"} style={{textDecoration: 'none', color: 'black'}}>My
-                                        Profile</Link></Typography></MenuItem>
-                                    <MenuItem style={{minHeight: 48}} onClick={this.onLogout}><Link to={"/"} style={{
+                                    
+                                    <MenuItem style={{minHeight: 48}} onClick={this.onMyProfile}><Typography><Link to={"/profile"} style={{
                                         textDecoration: 'none',
                                         color: 'black'
-                                    }}><Typography>Logout</Typography></Link></MenuItem>
+                                    }}>My Profile</Link></Typography></MenuItem>
+									
+									<MenuItem style={{minHeight: 48}} onClick={this.onLogout}><Link to={"/"} style={{
+                                        textDecoration: 'none',
+                                        color: 'black'
+                                    }}><Typography>Logout</Typography></Link></MenuItem>									
                                 </Menu>
                             </div>
                         }
@@ -675,6 +679,8 @@ class Header extends Component {
         this.setState({
             loggedIn: true
         });
+		
+		this.props.history.push("/profile");
     }
 
     // when customer clicks on logout inside the menu remove's access-token, uuid, first-name from sessionStorage and redirects to home page and closes the menu
@@ -685,9 +691,10 @@ class Header extends Component {
         this.setState({
             loggedIn: false
         })
-        this.onMenuClose();
+        this.props.history.push("/");
+		this.onMenuClose();
     }
 
 }
 
-export default withStyles(styles)(Header);
+export default withRouter(withStyles(styles)(Header));
