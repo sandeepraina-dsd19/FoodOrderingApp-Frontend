@@ -383,7 +383,9 @@ class Checkout extends Component {
 
         xhr.addEventListener("readystatechange", function () {
             if (this.readyState === 4) {
-                that.setState({addresses: JSON.parse(this.responseText).addresses});
+                if (JSON.parse(this.responseText).addresses !== null) {
+					that.setState({addresses: JSON.parse(this.responseText).addresses});
+				}
             }
         });
 
@@ -413,7 +415,7 @@ class Checkout extends Component {
             }
         });
 
-        let url = this.props.baseUrl + '/order/coupon/Flat30';
+        let url = this.props.baseUrl + '/order/coupon/FLAT30';
 
         xhr.open('GET', url);
 
